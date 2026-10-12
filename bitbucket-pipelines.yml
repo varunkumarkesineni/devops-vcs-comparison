@@ -1,0 +1,17 @@
+# Bitbucket Pipelines
+image: python:3.12-slim
+
+pipelines:
+  default:
+    - step:
+        name: Run unit tests
+        script:
+          - cd sample-app
+          - python -m unittest -v
+  pull-requests:
+    '**':
+      - step:
+          name: Test pull request
+          script:
+            - cd sample-app
+            - python -m unittest -v

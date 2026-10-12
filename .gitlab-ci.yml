@@ -1,0 +1,26 @@
+# GitLab CI/CD pipeline
+image: python:3.12-slim
+
+stages:
+  - test
+  - build
+
+unit_tests:
+  stage: test
+  script:
+    - cd sample-app
+    - python -m unittest -v
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+package_app:
+  stage: build
+  script:
+    - mkdir -p dist && cp sample-app/taskmanager.py dist/
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 week
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
